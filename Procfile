@@ -1,1 +1,1 @@
-worker: python run_all.py
+worker: python forex_bot_secure.py
