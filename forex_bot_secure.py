@@ -115,36 +115,12 @@ def log(msg, level="info"):
 # ══════════════════════════════════════════════════════════════
 #   SECURITY
 # ══════════════════════════════════════════════════════════════
-KEY_FILE = "/tmp/dummy"
-ENC_FILE = "/tmp/dummy"
 
-def load_keys():
-    if not os.path.exists(KEY_FILE) or not os.path.exists(ENC_FILE):
-        print("\n  ERROR: Keys not set up.")
-        print("  Run: conda run -n tradingbot python forex_setup_keys.py\n")
-        raise SystemExit(1)
-    with open(KEY_FILE, "rb") as kf:
-        fernet_key = kf.read()
-    with open(ENC_FILE, "rb") as ef:
-        encrypted = ef.read()
-    f = Fernet(fernet_key)
-    try:
-        raw = f.decrypt(encrypted).decode()
-    except Exception:
-        print("\n  ERROR: Could not decrypt keys. Re-run forex_setup_keys.py\n")
-        raise SystemExit(1)
-    parts = raw.split("|||")
-    if len(parts) != 3:
-        print("\n  ERROR: Corrupted key file. Re-run forex_setup_keys.py\n")
-        raise SystemExit(1)
-    return parts[0], parts[1], parts[2]
 
-def _get_hmac_secret():
-    with open(KEY_FILE, "rb") as f:
-        return hashlib.sha256(f.read()).digest()
+
 
 def sign_score(pair, score_dict):
-    secret  = _get_hmac_secret()
+    secret = b"static-secret-key"
     payload = json.dumps({"pair": pair, "scores": score_dict},
                          sort_keys=True).encode()
     return hmac.new(secret, payload, hashlib.sha256).hexdigest()
