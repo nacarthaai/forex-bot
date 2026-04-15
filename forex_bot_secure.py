@@ -115,6 +115,8 @@ def log(msg, level="info"):
 # ══════════════════════════════════════════════════════════════
 #   SECURITY
 # ══════════════════════════════════════════════════════════════
+KEY_FILE = "/tmp/dummy"
+ENC_FILE = "/tmp/dummy"
 
 def load_keys():
     if not os.path.exists(KEY_FILE) or not os.path.exists(ENC_FILE):
